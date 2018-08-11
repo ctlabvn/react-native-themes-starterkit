@@ -49,7 +49,7 @@ dataList.forEach((element, index) => {
 
 const MessageItem = wrap(({ item }) => (
   <View cls="ph2">
-    <Text cls="boldGray tc mv4">{item.date}</Text>
+    <Text cls="boldGray tc mv4 ph2">{item.date}</Text>
     {item.messageList.map((item, index) => (
       <MessageElement key={index} data={item} />
     ))}

@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   DeviceEventEmitter,
   NativeModules
 } from 'react-native';
@@ -23,8 +24,15 @@ type Props = {};
 export default class App extends Component<Props> {
   render() {
     return (
-      <View cls="flx-i jcc aic bg-#F5FCFF">
+      <View cls="flx-i bg-#F5FCFF">
         <Messenger />
+        <TextInput
+          underlineColorAndroid="transparent"
+          cls="ma2 h2"
+          placeholder="Writing something..."
+          multiline
+          keyboardType="default"
+        />
       </View>
     );
   }
