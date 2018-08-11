@@ -111,20 +111,27 @@ const transformStyle = (elementsTree, targetProp, prop) => {
 
     for (let i = 0; i < splitted.length; i++) {
       const cls = splitted[i];
+      let ret;
       if (cls.length > 0) {
-        if (styles[cls]) {
-          /* Style found */
-          translatedStyle.push(styles[cls]);
-        } else {
+        ret = styles[cls];
+        // try fallback with magic functions
+        if (!ret) {
           const [fnName, ...args] = cls.split(/_(?=[^_])/);
           if (typeof options.fn[fnName] === 'function') {
-            translatedStyle.push(options.fn[fnName].apply(elementsTree, args));
-          } else {
-            // throw new Error(`style '${cls}' not found`);
-            // should warning instead
-            console.warn(`style '${cls}' not found`);
+            ret = options.fn[fnName].apply(elementsTree, args);
           }
         }
+      }
+
+      // Style found
+      if (ret) {
+        Array.isArray(ret)
+          ? Array.prototype.push.apply(translatedStyle, ret)
+          : translatedStyle.push(ret);
+      } else {
+        // throw new Error(`style '${cls}' not found`);
+        // should warning instead
+        console.warn(`style '${cls}' not found`);
       }
     }
   }
@@ -146,10 +153,9 @@ const recursiveStyle = elementsTree => {
         if (
           propKey.substr(-options.clsPropName.length) === options.clsPropNameCap
         ) {
-          mapPropKeys[propKey] = `${propKey.substr(
-            0,
-            propKey.length - options.clsPropName.length
-          )}Style`;
+          mapPropKeys[propKey] =
+            propKey.substr(0, propKey.length - options.clsPropName.length) +
+            'Style';
         }
       }
     }
