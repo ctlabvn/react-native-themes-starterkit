@@ -111,9 +111,9 @@ const transformStyle = (elementsTree, targetProp, prop) => {
 
     for (let i = 0; i < splitted.length; i++) {
       const cls = splitted[i];
-      let ret;
+
       if (cls.length > 0) {
-        ret = styles[cls];
+        let ret = styles[cls];
         // try fallback with magic functions
         if (!ret) {
           const [fnName, ...args] = cls.split(/_(?=[^_])/);
@@ -121,17 +121,17 @@ const transformStyle = (elementsTree, targetProp, prop) => {
             ret = options.fn[fnName].apply(elementsTree, args);
           }
         }
-      }
 
-      // Style found
-      if (ret) {
-        Array.isArray(ret)
-          ? Array.prototype.push.apply(translatedStyle, ret)
-          : translatedStyle.push(ret);
-      } else {
-        // throw new Error(`style '${cls}' not found`);
-        // should warning instead
-        console.warn(`style '${cls}' not found`);
+        // Style found
+        if (ret) {
+          Array.isArray(ret)
+            ? Array.prototype.push.apply(translatedStyle, ret)
+            : translatedStyle.push(ret);
+        } else {
+          // throw new Error(`style '${cls}' not found`);
+          // should warning instead
+          console.warn(`style '${cls}' not found`);
+        }
       }
     }
   }
