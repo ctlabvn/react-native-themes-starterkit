@@ -4,6 +4,8 @@
 
 React Native Theme System brings functional styling to react-native. It is inspired by [Tachyons](http://tachyons.io) and uses it's scales and naming convention. [More about the advantages of this approach](http://mrmrs.github.io/writing/2016/03/24/scalable-css).
 
+![Demo](demo.png 'Demo')
+
 Let's see how tachyons compares to traditional styling:
 
 ##### 1. Traditional `react-native` style:
