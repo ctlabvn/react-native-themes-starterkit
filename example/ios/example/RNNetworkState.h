@@ -7,7 +7,8 @@
 
 #import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
+#import "Reachability.h"
 
 @interface RNNetworkState: RCTEventEmitter <RCTBridgeModule>
-
+@property Reachability *connReachability;
 @end

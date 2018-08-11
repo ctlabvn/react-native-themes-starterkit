@@ -1,6 +1,6 @@
 //@flow
 
-import React from "react"
+import React from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   DeviceEventEmitter,
   ViewProperties,
   StyleSheet
-} from "react-native"
+} from 'react-native';
 
 type Props = {
   debound?: number,
@@ -19,48 +19,50 @@ type Props = {
   onConnected?: Function,
   onDisconnected?: Function,
   ...ViewProperties
-}
+};
 
 type State = {
   isConnected: boolean,
   type: string,
   isFast: boolean,
   visible: boolean
-}
+};
 type NetworkData = {
   isConnected: boolean,
   type: string,
   isFast: boolean
-}
+};
 export default class NetworkState extends React.PureComponent<Props> {
   static defaultProps = {
     debound: 1500,
-    txtConnected: "Connected",
-    txtDisconnected: "No Internet Connection",
+    txtConnected: 'Connected',
+    txtDisconnected: 'No Internet Connection',
     onConnected: () => {},
     onDisconnected: () => {}
-  }
+  };
 
   state: State = {
     visible: false,
     isConnected: true,
-    type: "wifi",
+    type: 'wifi',
     isFast: true
+  };
+
+  _TIMEOUT = null;
+
+  componentDidMount() {
+    const { onConnected, onDisconnected } = this.props;
+    DeviceEventEmitter.addListener('networkChanged', (data: NetworkData) => {
+      alert(JSON.stringify(data));
+      if (this.state.isConnected !== data.isConnected) {
+        data.isConnected ? onConnected(data) : onDisconnected(data);
+        this.setState({ ...data, visible: true });
+      }
+    });
   }
 
-  _TIMEOUT = null
-
   constructor(props: Props) {
-    super(props)
-
-    const { onConnected, onDisconnected } = this.props
-    DeviceEventEmitter.addListener("networkChanged", (data: NetworkData) => {
-      alert(JSON.stringify(data))
-      if (this.state.isConnected !== data.isConnected) {
-        data.isConnected ? onConnected(data) : onDisconnected(data)
-        this.setState({ ...data, visible: true })
-      }
-    })
+    super(props);
   }
 
   render() {
@@ -71,16 +73,16 @@ export default class NetworkState extends React.PureComponent<Props> {
       styleDisconnected,
       debound,
       ...viewProps
-    } = this.props
+    } = this.props;
 
     if (this.state.visible && this.state.isConnected) {
-      this._TIMEOUT && clearTimeout(this._TIMEOUT)
+      this._TIMEOUT && clearTimeout(this._TIMEOUT);
       this._TIMEOUT = setTimeout(() => {
-        this.setState({ visible: false })
-      }, debound)
+        this.setState({ visible: false });
+      }, debound);
     }
     if (!this.state.visible) {
-      return <View />
+      return <View />;
     }
     return (
       <View style={styles.container} {...viewProps}>
@@ -92,31 +94,31 @@ export default class NetworkState extends React.PureComponent<Props> {
           ]}
         >
           {this.state.isConnected
-            ? txtConnected || "Connected"
-            : txtDisconnected || "No Internet Connection"}
+            ? txtConnected || 'Connected'
+            : txtDisconnected || 'No Internet Connection'}
         </Text>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0
   },
   txtSuccess: {
     paddingVertical: 5,
-    color: "#fff",
-    backgroundColor: "#4caf50",
-    textAlign: "center"
+    color: '#fff',
+    backgroundColor: '#4caf50',
+    textAlign: 'center'
   },
   txtError: {
     paddingVertical: 5,
-    color: "#fff",
-    backgroundColor: "#f44336",
-    textAlign: "center"
+    color: '#fff',
+    backgroundColor: '#f44336',
+    textAlign: 'center'
   }
-})
+});
